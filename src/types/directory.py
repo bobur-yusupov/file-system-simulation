@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Union
 from datetime import datetime
 
 from .node import Node
@@ -41,7 +41,7 @@ class Directory(Node):
         self.children.append(new_child)
         new_child.parent = self
 
-    def remove_child(self, child) -> None:
+    def remove_child(self, child: Union[Node, str]) -> None:
         """
         Remove a child node from the current node
         

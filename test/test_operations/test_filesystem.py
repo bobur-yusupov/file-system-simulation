@@ -12,24 +12,23 @@ class TestFileSystemOperations(unittest.TestCase):
         """Set up a fresh filesystem for each test"""
         self.fs = FileSystem()
     
+    def _file_exists(self, name):
+        """Helper method to check if a file/directory exists in current directory"""
+        for child in self.fs.current.children:
+            if child.name == name:
+                return True
+        return False
+    
     def test_mv_rename_file(self):
         """Test renaming a file using mv"""
         self.fs.touch("oldname.txt")
         self.fs.mv("oldname.txt", "newname.txt")
         
         # Check that oldname doesn't exist
-        found = False
-        for child in self.fs.current.children:
-            if child.name == "oldname.txt":
-                found = True
-        self.assertFalse(found)
+        self.assertFalse(self._file_exists("oldname.txt"))
         
         # Check that newname exists
-        found = False
-        for child in self.fs.current.children:
-            if child.name == "newname.txt":
-                found = True
-        self.assertTrue(found)
+        self.assertTrue(self._file_exists("newname.txt"))
     
     def test_mv_move_file_to_directory(self):
         """Test moving a file into a directory"""
@@ -38,11 +37,7 @@ class TestFileSystemOperations(unittest.TestCase):
         self.fs.mv("file.txt", "subdir")
         
         # File should not be in current directory
-        found = False
-        for child in self.fs.current.children:
-            if child.name == "file.txt":
-                found = True
-        self.assertFalse(found)
+        self.assertFalse(self._file_exists("file.txt"))
         
         # File should be in subdir
         subdir = None
@@ -67,16 +62,8 @@ class TestFileSystemOperations(unittest.TestCase):
         self.fs.cp("original.txt", "copy.txt")
         
         # Both files should exist
-        original_exists = False
-        copy_exists = False
-        for child in self.fs.current.children:
-            if child.name == "original.txt":
-                original_exists = True
-            if child.name == "copy.txt":
-                copy_exists = True
-        
-        self.assertTrue(original_exists)
-        self.assertTrue(copy_exists)
+        self.assertTrue(self._file_exists("original.txt"))
+        self.assertTrue(self._file_exists("copy.txt"))
         
         # Content should be the same
         content = self.fs.cat("copy.txt")

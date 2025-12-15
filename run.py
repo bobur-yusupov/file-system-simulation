@@ -107,20 +107,25 @@ class FileSystemCLI:
             logger.error("Usage: cat <file_name>")
 
     def write_file(self, args):
-        if len(args) >= 2:
-            content = " ".join(args[:-2])
-            file_name = args[-1]
-            if len(args) > 2 and args[-2] == ">":
-                try:
-                    # Find the file and write to it
-                    for child in self.fs.current.children:
-                        if child.name == file_name:
-                            child.write_content(content)
-                            logger.info(f"Content written to '{file_name}'.")
-                            return
-                    logger.error(f"File '{file_name}' not found.")
-                except Exception as e:
-                    logger.error(e)
+        if len(args) >= 3:
+            # Find the position of ">" to split content and filename
+            if ">" in args:
+                redirect_idx = args.index(">")
+                if redirect_idx > 0 and redirect_idx < len(args) - 1:
+                    content = " ".join(args[:redirect_idx])
+                    file_name = args[redirect_idx + 1]
+                    try:
+                        # Find the file and write to it
+                        for child in self.fs.current.children:
+                            if child.name == file_name:
+                                child.write_content(content)
+                                logger.info(f"Content written to '{file_name}'.")
+                                return
+                        logger.error(f"File '{file_name}' not found.")
+                    except Exception as e:
+                        logger.error(e)
+                else:
+                    logger.error("Usage: echo <text> > <file_name>")
             else:
                 logger.error("Usage: echo <text> > <file_name>")
         else:
