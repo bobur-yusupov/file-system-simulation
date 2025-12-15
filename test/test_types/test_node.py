@@ -1,4 +1,3 @@
-import pytest
 import unittest
 from unittest.mock import patch
 
@@ -7,22 +6,12 @@ from datetime import datetime, timedelta
 from src.types.node import Node
 
 
-@pytest.fixture()
-def root_node():
-    return Node(name="root")
-
-
-@pytest.fixture()
-def child_node(root_node: Node):
-    return Node(name="child", parent=root_node)
-
-
 """
 Unit tests for Node class
 """
 
 
-class TestNodeParameters:
+class TestNodeParameters(unittest.TestCase):
     """
     Test cases to check the parameters and methods of the Node class
     """
@@ -34,7 +23,7 @@ class TestNodeParameters:
 
         node: Node = Node(name="home")
 
-        assert node.name == "home"
+        self.assertEqual(node.name, "home")
 
     def test_node_parent(self) -> None:
         """
@@ -44,8 +33,8 @@ class TestNodeParameters:
         parent_node: Node = Node(name="parent")
         child_node: Node = Node(name="child", parent=parent_node)
 
-        assert child_node.name == "child"
-        assert child_node.parent == parent_node
+        self.assertEqual(child_node.name, "child")
+        self.assertEqual(child_node.parent, parent_node)
 
 
 class TestNodeDateTimeParameters(unittest.TestCase):

@@ -1,7 +1,8 @@
-from typing import Optional, List
+from typing import Optional, List, Union
 from datetime import datetime
 
 from .node import Node
+from src.utils.exceptions import FileNotFoundError
 
 
 class Directory(Node):
@@ -40,12 +41,24 @@ class Directory(Node):
         self.children.append(new_child)
         new_child.parent = self
 
-    def remove_child(self, child: "Node") -> None:
+    def remove_child(self, child: Union[Node, str]) -> None:
         """
         Remove a child node from the current node
+
+        :param child: Either a Node object or a string name of the child to remove
         """
-        self.children.remove(child)
-        child.parent = None
+        if isinstance(child, str):
+            # Find the child by name
+            for node in self.children:
+                if node.name == child:
+                    self.children.remove(node)
+                    node.parent = None
+                    return
+            raise FileNotFoundError(f"Node '{child}' not found")
+        else:
+            # Remove by Node object
+            self.children.remove(child)
+            child.parent = None
 
     def list_children(self) -> List["Node"]:
         """

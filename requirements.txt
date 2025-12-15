@@ -1,0 +1,6 @@
+# File System Simulation Requirements
+# Python 3.10+ required
+
+# No external dependencies required for core functionality
+# Development dependencies (optional)
+# For testing, use built-in unittest module
