@@ -19,6 +19,7 @@ class FileSystemCLI:
             "echo": self.write_file,
             "pwd": self.print_working_directory,
             "find": self.find_node,
+            "grep": self.grep_files,
             "tree": self.show_tree,
             "help": self.show_help,
             "exit": self.exit_cli,
@@ -141,6 +142,19 @@ class FileSystemCLI:
                 logger.info(f"No matches found for '{name}'.")
         else:
             logger.error("Usage: find <name>")
+
+    def grep_files(self, args):
+        if args:
+            pattern = " ".join(args)
+            results = self.fs.grep(pattern)
+            if results:
+                logger.info(f"Found {len(results)} match(es):")
+                for file_path, line_num, line in results:
+                    logger.info(f"{file_path}:{line_num}: {line}")
+            else:
+                logger.info(f"No matches found for pattern '{pattern}'.")
+        else:
+            logger.error("Usage: grep <pattern>")
 
     def show_tree(self, args):
         def print_tree(node, prefix="", is_last=True):

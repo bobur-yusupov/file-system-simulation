@@ -157,6 +157,28 @@ class FileSystem:
         search(self.current)
         return results
 
+    def grep(self, pattern: str) -> List[tuple]:
+        """
+        Search for pattern in file contents in current directory and subdirectories.
+        Returns list of tuples (file_path, matching_line)
+        """
+        results = []
+        
+        def search(node: Directory):
+            for child in node.children:
+                if isinstance(child, File):
+                    content = child.read_content()
+                    if content:
+                        lines = content.split('\n')
+                        for i, line in enumerate(lines, 1):
+                            if pattern in line:
+                                results.append((child.get_path(), i, line))
+                elif isinstance(child, Directory):
+                    search(child)
+        
+        search(self.current)
+        return results
+
     def get_current_path(self) -> str:
         return self.current.get_path()
 
