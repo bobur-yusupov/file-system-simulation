@@ -49,7 +49,7 @@ class FileSystemCLI:
 
     def list_contents(self, args):
         contents = self.fs.ls()
-        
+
         # Check if -l flag is provided for detailed listing
         if args and args[0] == "-l":
             from src.types import File, Directory
@@ -165,13 +165,13 @@ class FileSystemCLI:
         def print_tree(node, prefix="", is_last=True):
             connector = "└── " if is_last else "├── "
             logger.info(prefix + connector + node.name)
-            
+
             if hasattr(node, 'children') and node.children:
                 extension = "    " if is_last else "│   "
                 for i, child in enumerate(node.children):
                     is_last_child = i == len(node.children) - 1
                     print_tree(child, prefix + extension, is_last_child)
-        
+
         logger.info(self.fs.current.name)
         if hasattr(self.fs.current, 'children'):
             for i, child in enumerate(self.fs.current.children):

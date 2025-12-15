@@ -80,17 +80,17 @@ class FileSystem:
             if child.name == src_name:
                 src_node = child
                 break
-        
+
         if src_node is None:
             raise FileNotFoundError(f"'{src_name}' not found")
-        
+
         # Check if destination is a directory that exists
         dest_node = None
         for child in self.current.children:
             if child.name == dest_name and isinstance(child, Directory):
                 dest_node = child
                 break
-        
+
         if dest_node:
             # Move into the destination directory
             self.current.remove_child(src_node)
@@ -109,17 +109,17 @@ class FileSystem:
             if child.name == src_name:
                 src_node = child
                 break
-        
+
         if src_node is None:
             raise FileNotFoundError(f"'{src_name}' not found")
-        
+
         # Check if destination is a directory that exists
         dest_node = None
         for child in self.current.children:
             if child.name == dest_name and isinstance(child, Directory):
                 dest_node = child
                 break
-        
+
         if isinstance(src_node, File):
             # Copy file
             if dest_node:
@@ -146,14 +146,14 @@ class FileSystem:
         Find all nodes with the given name in the current directory and subdirectories.
         """
         results = []
-        
+
         def search(node: Directory):
             for child in node.children:
                 if child.name == name:
                     results.append(child)
                 if isinstance(child, Directory):
                     search(child)
-        
+
         search(self.current)
         return results
 
@@ -163,7 +163,7 @@ class FileSystem:
         Returns list of tuples (file_path, matching_line)
         """
         results = []
-        
+
         def search(node: Directory):
             for child in node.children:
                 if isinstance(child, File):
@@ -175,7 +175,7 @@ class FileSystem:
                                 results.append((child.get_path(), i, line))
                 elif isinstance(child, Directory):
                     search(child)
-        
+
         search(self.current)
         return results
 

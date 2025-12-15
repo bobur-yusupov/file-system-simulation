@@ -44,7 +44,7 @@ class Directory(Node):
     def remove_child(self, child: Union[Node, str]) -> None:
         """
         Remove a child node from the current node
-        
+
         :param child: Either a Node object or a string name of the child to remove
         """
         if isinstance(child, str):
